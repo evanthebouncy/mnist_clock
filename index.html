@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div>
+      <span style="float: left">
+        <canvas id="canv_0" width="100" height="100"></canvas>
+        <canvas id="canv_1" width="100" height="100"></canvas>
+        <canvas id="canv_2" width="100" height="100"></canvas>
+        <canvas id="canv_3" width="100" height="100"></canvas>
+        <canvas id="canv_4" width="100" height="100"></canvas>
+        <canvas id="canv_5" width="100" height="100"></canvas>
+      </span>
+    </div>
+
+    <script>
+
+    var cv0 = document.getElementById('canv_0');
+    var ctx0 = cv0.getContext('2d');
+    var cv1 = document.getElementById('canv_1');
+    var ctx1 = cv1.getContext('2d');
+    var cv2 = document.getElementById('canv_2');
+    var ctx2 = cv2.getContext('2d');
+    var cv3 = document.getElementById('canv_3');
+    var ctx3 = cv3.getContext('2d');
+    var cv4 = document.getElementById('canv_4');
+    var ctx4 = cv4.getContext('2d');
+    var cv5 = document.getElementById('canv_5');
+    var ctx5 = cv5.getContext('2d');
+
+    var states = [0, 1, 2, 3, 4, 5];
+    var ctxs = [ctx0, ctx1, ctx2, ctx3, ctx4, ctx5];
+
+    // sample a random image 0 through 800
+    function random_item() {
+      return Math.floor(Math.random() * 800);
+    }
+
+    // draw image on the canvas with the class id and a item_number
+    function draw_img_on_canvas(class_id, item_num, ctx) {
+      var path = "datas/"+class_id.toString()+"/"+item_num.toString()+".png";
+      var drawing = new Image();
+      drawing.src = path; // can also be a remote URL e.g. http://
+      // drawing.src = "datas/0/5255.png"; // can also be a remote URL e.g. http://
+      drawing.onload = function() {
+      ctx.drawImage(drawing, 0, 0, 28, 28,     // source rectangle
+                    0, 0, 100, 100);
+      };
+    };
+
+    // render the state
+    function render(){
+      for (var i = 0; i < 6; i++){
+        var digit = states[i];
+        draw_img_on_canvas(digit, random_item(), ctxs[i]);
+      }
+    }
+
+    // set the states
+    function set_states(){
+      var time = new Date();
+      var hour = time.getHours();
+      var digit0 = Math.floor(hour / 10);
+      var digit1 = Math.floor(hour % 10);
+      var minute = time.getMinutes();
+      var digit2 = Math.floor(minute / 10);
+      var digit3 = Math.floor(minute % 10);
+      var second = time.getSeconds();
+      var digit4 = Math.floor(second / 10);
+      var digit5 = Math.floor(second % 10);
+      console.log(hour);
+      states = [digit0, digit1, digit2, digit3, digit4, digit5];
+    }
+
+    function animate() {
+      setTimeout(function (){
+        // call again next time we can draw
+        requestAnimationFrame(animate);
+        set_states();
+        render();
+        
+      }, 1000);
+    }
+    animate();
+
+    </script>
+
+  </body>
+</html>
+
